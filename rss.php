@@ -24,5 +24,5 @@ foreach ($feed->get_items($items, $items) as $item) {
     echo $item->get_content(true);
     echo '</article>';
 }
-echo '<button class="back-button"> <a href="../RSS(Final)/index.html">Haz clic aquí para seleccionar otra noticia :o</a> </button>';
+echo '<button class="back-button"> <a href="../RSS(Proyecto)/index.html">Haz clic aquí para seleccionar otra noticia :o</a> </button>';
 ?>
