@@ -26,8 +26,7 @@ if($conexion){
         $descripcion = $item->get_description();
         echo $item->get_content(true);
 
-        $sql = "insert into `noticias` (link, titulo, autor, fecha, descripcion) values ('$link', '$titulo', '$autor', $fecha,'$descripcion')";
-        echo $sql;
+        $sql = "insert into `noticias` (link, titulo, autor, fecha, descripcion) values ('$link', '$titulo', '$autor', '$fecha','$descripcion')";
         $resultado = $conexion->query($sql);
     }
     $conexion->close();
