@@ -30,7 +30,7 @@ if($conexion){
         $resultado = $conexion->query($sql);
     }
     $conexion->close();
-    echo '<button class="back-button"> <a href="../RSS(Proyecto)/index.html">Haz clic aquí para seleccionar otra noticia :o</a> </button>';
+    header('Location: index.php');
 }else{
     echo'alert("No se pudo conectar a la base de datos");';
 }
