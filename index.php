@@ -26,7 +26,6 @@
             <input type="submit" id="verNoticias" value="Ver Noticias" class="btn btn-primary">
         </form> <br>
     </div>
-    <?php include 'consultas.php'; ?>
     <div class="news_Space" id="news_Space">
         <div class="row2">
             <label for="select_sort">Elija una forma de ordenamiento: </label>
@@ -36,6 +35,9 @@
                 <option value="year">Año</option>
             </select>
             <button class="btn btn-warning" id="sort_button">Ordenar</button>
+        </div>
+        <div class="news" id="news_Presentation">
+            <?php include 'consultas.php'; ?>
         </div>
     </div>
 </body>
