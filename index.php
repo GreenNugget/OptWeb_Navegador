@@ -8,16 +8,24 @@
     <link rel="stylesheet" href="bootstrap-4.3.1-dist/css/bootstrap.min.css">
 </head>
 
-<body>
-    <section class="container">
+<body class="bg-light">
+    <div class="container">
+        <header class="page-header">
+            <i> <img src="https://upload.wikimedia.org/wikipedia/commons/4/43/Feed-icon.svg" alt="rss" width="30px" height="30px"> </i>
+            <h3>Lector de noticias</h3>
+        </header> <br>
         <form action="rss.php" method="POST" class="text-center">
-            Url de noticias:
-            <input type="text" id="url" name="url" placeholder="Ingresa tu url aquí :D" /><br><br>
-            Número de noticias que quieres ver:
-            <input type="text" id="numN" name="numN" required /><br><br>
-            <input type="submit" id="verNoticias" value="Ver Noticias">
-        </form>
-    </section>
+            <div class="row">
+                <label for="url"> Ingresa la url que desees: </label>
+                <input class="form-control" type="text" id="url" name="url" placeholder="Ingresa tu url aquí :D" />
+            </div> <br> <br>
+            <div class="row">
+                <label for="numN"> Número de noticias que quieres ver: </label>
+                <input class="form-control" type="text" id="numN" name="numN" placeholder="10" required />
+            </div> <br> <br>
+            <input type="submit" id="verNoticias" value="Ver Noticias" class="btn btn-primary">
+        </form> <br>
+    </div>
     <?php include 'consultas.php'; ?>
     <div id="news_Space">
     </div>
