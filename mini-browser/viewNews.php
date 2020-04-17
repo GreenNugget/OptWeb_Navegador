@@ -14,13 +14,13 @@ if ($conexion) {
     $sql = "select * from `noticias`";
     $resultado = $conexion->query($sql);
 
-    echo '<div class="container my-5 bg-dark text-white d-block" id="newsContainer">';
-    echo '<h2>Your News:</h2>';
+    echo '<div class="container my-5 bg-dark text-white d-block" id="newsContainer">
+        <h2>Your Urls:</h2>';
     while ($fila = mysqli_fetch_array($resultado)) {
         echo '<div class="container pt-3 my-3 border">';
-        echo "<p>Title: " . $fila["titulo"] . '</p>';
-        echo '<p><a href="' . $fila['link'] . '" class="card-link">Haz click aquí para ver la noticia</a></p>';
-        echo "<p>Description: " . $fila["descripcion"] . "</p>";
+        echo "<p>Title: " . $fila["title"] . '</p>';
+        echo "<p>Description: " . $fila["description"] . "</p>";
+        echo '<p><a href="' . $fila['link'] . '" class="card-link" target="_blank">Visita la página haciendo click AQUÍ</a></p>';
         echo '</div>';
     }
     echo '</div>';
