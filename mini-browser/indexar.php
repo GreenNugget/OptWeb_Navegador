@@ -37,8 +37,6 @@ function updateUrl($url){
             $date = limpiarString($meta->getAttribute('content'));
     endfor;
 
-    //recrusivity_level1($url);
-
     //Para almacenar en la bd
     $servername = "localhost";
     $database = "rss_news";
@@ -50,7 +48,7 @@ function updateUrl($url){
     }
 
     $sql = "INSERT INTO noticias (title, date, description, link, keywords) VALUES ( \"" . $title . "\", \"" . $date . "\",
-    \"" . $description . "\",\"" . $url . "\",\"" . $keywords . "\")";
+    \"" . $description . "\",\"" . $url . "\",\"" . $keywords . "\") WHERE link=$url";
 
     if (mysqli_query($conn, $sql)) {
         echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
@@ -60,22 +58,6 @@ function updateUrl($url){
         echo "<p>No se pudieron actualizar las noticias, intente más tarde :(</p>";
     }
 }
-
-if(isset($_GET['indexbtn'])):
-    $url 	=	$_GET['url'];
-
-	updateUrl($url);
-
-else:
-
-    echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
-        <h5>Type a Link to feed the database:</h5>';
-    echo '<form class="form-inline">
-            <input class="form-control mr-sm-2" type="search" placeholder="Ej.http://enterprise.com" aria-label="url" name="url" required>
-            <button class="btn btn-outline-warning my-2 my-sm-0" type="submit" name="indexbtn">Add to data base</button>
-        </form>';
-    echo '</div>';
-endif;
 
 /* Función para obtener todo el contenido de una página web, scrappeado */
 function curl($url){
@@ -114,7 +96,7 @@ function recrusivity_level1($url){
     for ($i = 0; $i < $links->length; $i++) :
         $oneLink = $links->item($i);
         $info = $oneLink->getAttribute('href');
-        echo '<p>' . $info . '</p>';
+        echo '<p>' . $info . '</p>';//Esto es únicamente para visualizar las urls
     endfor;
 }
 
