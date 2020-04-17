@@ -5,31 +5,6 @@ require_once('index.html');
 if(isset($_GET['addbtn'])):
     $url 	=	$_GET['url'];
 
-    function curl($url) {
-       $ch = curl_init($url); // Inicia sesión cURL
-       curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); // Configura cURL para devolver el resultado como cadena
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Configura cURL para que no verifique el peer del certificado dado que nuestra URL utiliza el protocolo HTTPS
-        $info = curl_exec($ch); // Establece una sesión cURL y asigna la información a la variable $info
-        curl_close($ch); // Cierra sesión cURL
-        return $info; // Devuelve la información de la función
-    }
-
-    function file_get_contents_curl($url){
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        $data = curl_exec($ch);
-        curl_close($ch);
-        return $data;
-    }
-
-    function limpiarString($String){ 
-        $String = str_replace(array("|","|","[","^","´","`","¨","~","]","'","#","{","}",".",""),"",$String);
-        return $String;
-    }
-
 	$html 	= 	file_get_contents_curl($url);                    
     $doc 	= 	new DOMDocument();
     @$doc->loadHTML($html);
@@ -45,14 +20,6 @@ if(isset($_GET['addbtn'])):
         if($meta->getAttribute('name') == 'date')
             $date = limpiarString($meta->getAttribute('content'));
     endfor;
-    /*ESTO ES PARA VER EL CONTENIDO ALMACENADO
-    echo "TITLE :<br>".$title."<br>";
-    echo "DESCRIPTION :<br>".$description."<br>";
-    echo "KEYWORDS :<br>".$keywords."<br>";
-    echo "URL :<br>".$url."<br>";
-    echo "DATE: <br>".$date;
-    $sitioweb = curl($url); 
-    echo $sitioweb;*/
     
     //COMENZAMOS A ALMACENAR EN LA BASE DE DATOS
     $servername = "localhost";
@@ -72,7 +39,7 @@ if(isset($_GET['addbtn'])):
         <h5>¡La página se almacenó correctamente!</h5>
         </div>';
     } else {
-            //echo "<p>Error de sintaxis por el título</p>";
+            echo "<p>No se pudo realizar la conexión a la base de datos :( </p>";
     }
 
 else:
@@ -85,4 +52,30 @@ else:
         </form>';
     echo '</div>';
 endif;
+
+function curl($url){
+    $ch = curl_init($url); // Inicia sesión cURL
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); // Configura cURL para devolver el resultado como cadena
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Configura cURL para que no verifique el peer del certificado dado que nuestra URL utiliza el protocolo HTTPS
+    $info = curl_exec($ch); // Establece una sesión cURL y asigna la información a la variable $info
+    curl_close($ch); // Cierra sesión cURL
+    return $info; // Devuelve la información de la función
+}
+
+function file_get_contents_curl($url){
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    $data = curl_exec($ch);
+    curl_close($ch);
+    return $data;
+}
+
+function limpiarString($String){
+    $String = str_replace(array("|", "|", "[", "^", "´", "`", "¨", "~", "]", "'", "#", "{", "}", ".", ""), "", $String);
+    return $String;
+}
+
 ?>
