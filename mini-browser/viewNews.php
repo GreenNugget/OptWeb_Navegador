@@ -14,12 +14,12 @@ if ($conexion) {
     $sql = "select * from `noticias`";
     $resultado = $conexion->query($sql);
 
-    if($fila = mysqli_fetch_array($resultado) == null){
+    if($resultado==null){
         echo '<div class="container my-5 bg-dark text-white d-block">
             <h5>You don´t have news to show :(</h5>
             <p>Use the button ´Add Link´ to add the url of a website</p>
             </div>';
-    }else{
+    }elseif($resultado!=null){
         echo '<div class="container my-5 bg-dark text-white d-block" id="newsContainer">
         <h2>Your Urls:</h2>';
         while ($fila = mysqli_fetch_array($resultado)) {
