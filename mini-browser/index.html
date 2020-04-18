@@ -26,8 +26,8 @@
                     <a class="nav-link" href="indexar.php"><button type="button" class="btn btn-warning">Indexar</button></a>
                 </li>
             </ul>
-            <form class="form-inline">
-                <input class="form-control mr-sm-2" type="search" placeholder="Type to Search" aria-label="Search">
+            <form class="form-inline" action="searchWord.php" method="POST">
+                <input class="form-control mr-sm-2" name="wordToSearch" id="wordToSearch" type="search" placeholder="Type to Search" aria-label="Search">
                 <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>
