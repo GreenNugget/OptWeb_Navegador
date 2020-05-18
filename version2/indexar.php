@@ -7,11 +7,6 @@ require_once('index.html');
 $conexion = mysqli_connect('localhost', 'root', '', 'rss_news');
 
 if ($conexion) {
-    $link;
-    $titulo;
-    $autor;
-    $fecha;
-    $descripcion;
 
     $sql = "select * from `noticias`";
     $resultado = $conexion->query($sql);

@@ -32,25 +32,26 @@ function updateUrl($url){
             $date = limpiarString($meta->getAttribute('content'));
     endfor;
 
-    //Para almacenar en la bd
-    $servername = "localhost";
-    $database = "rss_news";
-    $username = "root";
-    $password = "";
-    $conn = mysqli_connect($servername, $username, $password, $database);
-    if (!$conn) {
+    $conexion = mysqli_connect('localhost', 'root', '', 'rss_news');
+    if (!$conexion) {
         die("Conexión fallida: " . mysqli_connect_error());
     }
 
-    $sql = "INSERT INTO noticias (title, date, description, link, keywords) VALUES ( \"" . $title . "\", \"" . $date . "\",
-    \"" . $description . "\",\"" . $url . "\",\"" . $keywords . "\") where link=$url";
+    echo"SÍ LLEGA A LA CONSULTA";
+    $sql = "UPDATE noticias SET 'title='" . $title . ",'date'=" . $date . ",'keywords'=" . $keywords . ",'description'=" . $description . "WHERE 'link'=" . $url;
+    //"UPDATE noticias SET title=$title,date=$date,keywords=$keywords,description= $description WHERE link=$url";
 
-    if (mysqli_query($conn, $sql)) {
+    $sql = "INSERT INTO noticias (title, date, description, link, keywords) VALUES ( \"" . $title . "\", \"" . $date . "\",
+    \"" . $description . "\",\"" . $url . "\",\"" . $keywords . "\")";
+    
+    if (mysqli_query($conexion, $sql)) {
         echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
         <h5>¡Las páginas se actualizaron correctamente!</h5>
         </div>';
     } else {
-        echo "<p>No se pudieron actualizar las noticias, intente más tarde :(</p>";
+        echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
+        <h6>No se pudieron actualizar las noticias, intente más tarde :(</h6>
+        </div>';
     }
 }
 
@@ -112,12 +113,11 @@ function recrusivity_level1($url){
 // FUNCIONES PARA EL CURL
 /* Función para obtener todo el contenido de una página web, scrappeado */
 function curl($url){
-    $ch = curl_init($url); // Inicia sesión cURL
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); // Configura cURL para devolver el resultado como cadena
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Configura cURL para que no verifique el peer del certificado dado que nuestra URL utiliza el protocolo HTTPS
-    $info = curl_exec($ch); // Establece una sesión cURL y asigna la información a la variable $info
-    curl_close($ch); // Cierra sesión cURL
-    return $info; // Devuelve la información de la función
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $info = curl_exec($ch);
+    return $info;
 }
 
 /* Función para obtener el contenido de una url */
