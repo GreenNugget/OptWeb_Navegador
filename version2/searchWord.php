@@ -8,7 +8,7 @@ $conexion = mysqli_connect('localhost', 'root', '', 'rss_news');
 if ($conexion) {
 
     //aquí va la parte importantísima
-    $sql = "select title, description, link from `noticias` where title like '%".$word."%' or description like '%".$word."%' or link like '%".$word."%' or keywords like '%".$word."%'";
+    $sql = "select title, description, link from `noticias` where title like '%".$word."%' or description like '%".$word."%' or link like '%".$word."%' or keywords like '%".$word."%' ORDER BY date DESC";
     $resultado = $conexion->query($sql);
 
     echo '<div class="container my-5 bg-dark text-white d-block" id="newsContainer">

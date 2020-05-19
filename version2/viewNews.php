@@ -11,7 +11,7 @@ if ($conexion) {
     $fecha;
     $descripcion;
 
-    $sql = "select * from `noticias`";
+    $sql = "select * from noticias ORDER BY date DESC";
     $resultado = $conexion->query($sql);
 
     echo '<div class="container my-5 bg-dark text-white d-block" id="newsContainer">
