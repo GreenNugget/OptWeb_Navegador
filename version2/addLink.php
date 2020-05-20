@@ -17,26 +17,32 @@ if(isset($_GET['addbtn'])):
         	$description = limpiarString($meta->getAttribute('content'));
         if($meta->getAttribute('name') == 'keywords')
             $keywords = limpiarString($meta->getAttribute('content'));
+        else
+            $keywords = 'Esta página no tiene keywords';
         if($meta->getAttribute('name') == 'date')
             $date = limpiarString($meta->getAttribute('content'));
+        else
+            $date = 'Esta Página no tiene fecha';
     endfor;
 
     //COMENZAMOS A ALMACENAR EN LA BASE DE DATOS
     $dbInfo = json_decode(file_get_contents("../db_info.json"));
-    $conn = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
-    if (!$conn) {
+    $connection = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
+    if (!$connection) {
         die("Conexión fallida: " . mysqli_connect_error());
     }
 
     $sql = "INSERT INTO noticias (title, date, description, link, keywords) VALUES ( \"".$title."\", \"".$date."\",
     \"".$description."\",\"".$url."\",\"".$keywords."\")";
 
-    if (mysqli_query($conn, $sql)) {
+    if (mysqli_query($connection, $sql)) {
         echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
         <h5>¡La página se almacenó correctamente!</h5>
         </div>';
     } else {
-            echo "<p>No se pudo realizar la conexión a la base de datos :( </p>";
+        echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
+        <h5>¡La página ya se encuentra almacenada en la base de datos!</h5>
+        </div>';
     }
 
 else:

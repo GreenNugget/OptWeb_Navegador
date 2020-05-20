@@ -28,15 +28,14 @@ if(isset($_GET['addbtn'])):
         die("Conexión fallida: " . mysqli_connect_error());
     }
 
-    $sql = "INSERT INTO noticias (title, date, description, link, keywords) VALUES ( \"".$title."\", \"".$date."\",
-    \"".$description."\",\"".$url."\",\"".$keywords."\")";
+    $sql = "INSERT INTO noticias (title, date, description, link, keywords) VALUES ( \"".$title."\", \"".$date."\",\"".$description."\",\"".$url."\",\"".$keywords."\")";
 
     if (mysqli_query($conn, $sql)) {
         echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
         <h5>¡La página se almacenó correctamente!</h5>
         </div>';
     } else {
-            echo "<p>No se pudo realizar la conexión a la base de datos :( </p>";
+        echo "<p>No se pudo realizar la conexión a la base de datos :( </p>";
     }
 
 else:
