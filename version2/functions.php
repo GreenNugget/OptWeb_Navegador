@@ -39,7 +39,6 @@ function updateUrl($url){
 
     echo"SÍ LLEGA A LA CONSULTA";
     $sql = "UPDATE noticias SET 'title='" . $title . ",'date'=" . $date . ",'keywords'=" . $keywords . ",'description'=" . $description . "WHERE 'link'=" . $url;
-    //"UPDATE noticias SET title=$title,date=$date,keywords=$keywords,description= $description WHERE link=$url";
 
     $sql = "INSERT INTO noticias (title, date, description, link, keywords) VALUES ( \"" . $title . "\", \"" . $date . "\",
     \"" . $description . "\",\"" . $url . "\",\"" . $keywords . "\")";
@@ -106,7 +105,6 @@ function recrusivity_level1($url){
         }else{
             saveOnDb($info);
         }
-        //echo '<p>' . $info . '</p>'; //Esto es únicamente para visualizar las urls
     endfor;
 }
 
