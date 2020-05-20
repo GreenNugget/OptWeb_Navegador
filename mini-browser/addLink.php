@@ -22,7 +22,7 @@ if(isset($_GET['addbtn'])):
     endfor;
 
     //COMENZAMOS A ALMACENAR EN LA BASE DE DATOS
-    $dbInfo = json_decode(file_get_contents("db_info.json"));
+    $dbInfo = json_decode(file_get_contents("../db_info.json"));
     $conn = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
     if (!$conn) {
         die("Conexión fallida: " . mysqli_connect_error());
