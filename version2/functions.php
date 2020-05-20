@@ -1,9 +1,14 @@
 <?php
 
+//Función para conectar con la bd
+function connectDb(){
+    $dbInfo = json_decode(file_get_contents("../db_info.json"));
+    return mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
+}
+
 //Función para comprobar si un url yaestá en la base de datos
 function onDataBase($url){
-    $dbInfo = json_decode(file_get_contents("../db_info.json"));
-    $conexion = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
+    $conexion = connectDb();
 
     $sql = "select * from `noticias`";
     $resultado = $conexion->query($sql);
@@ -33,8 +38,7 @@ function updateUrl($url){
             $date = limpiarString($meta->getAttribute('content'));
     endfor;
 
-    $dbInfo = json_decode(file_get_contents("../db_info.json"));
-    $conexion = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
+    $conexion = $conexion = connectDb();
     if (!$conexion) {
         die("Conexión fallida: " . mysqli_connect_error());
     }
@@ -75,9 +79,8 @@ function saveOnDb($url){
         if ($meta->getAttribute('name') == 'date')
             $date = limpiarString($meta->getAttribute('content'));
     endfor;
-
-    $dbInfo = json_decode(file_get_contents("../db_info.json"));
-    $conexion = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
+    
+    $conexion = $conexion = connectDb();
     if (!$conexion) {
         die("Conexión fallida: " . mysqli_connect_error());
     }
