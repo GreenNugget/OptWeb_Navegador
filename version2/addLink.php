@@ -20,12 +20,10 @@ if(isset($_GET['addbtn'])):
         if($meta->getAttribute('name') == 'date')
             $date = limpiarString($meta->getAttribute('content'));
     endfor;
-    
+
     //COMENZAMOS A ALMACENAR EN LA BASE DE DATOS
-    $servername = "localhost";
-    $database = "rss_news";
-    $username = "root";
-    $password = "";
+    $dbInfo = json_decode(file_get_contents("../db_info.json"));
+    $conexion = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
     $conn = mysqli_connect($servername, $username, $password, $database);
     if (!$conn) {
         die("Conexión fallida: " . mysqli_connect_error());

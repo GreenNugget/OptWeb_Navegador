@@ -2,7 +2,8 @@
 
 //Función para comprobar si un url yaestá en la base de datos
 function onDataBase($url){
-    $conexion = mysqli_connect('localhost', 'root', '', 'rss_news');
+    $dbInfo = json_decode(file_get_contents("../db_info.json"));
+    $conexion = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
 
     $sql = "select * from `noticias`";
     $resultado = $conexion->query($sql);
@@ -32,7 +33,8 @@ function updateUrl($url){
             $date = limpiarString($meta->getAttribute('content'));
     endfor;
 
-    $conexion = mysqli_connect('localhost', 'root', '', 'rss_news');
+    $dbInfo = json_decode(file_get_contents("../db_info.json"));
+    $conexion = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
     if (!$conexion) {
         die("Conexión fallida: " . mysqli_connect_error());
     }
@@ -73,8 +75,9 @@ function saveOnDb($url){
         if ($meta->getAttribute('name') == 'date')
             $date = limpiarString($meta->getAttribute('content'));
     endfor;
-    
-    $conexion = mysqli_connect('localhost', 'root', '', 'rss_news');
+
+    $dbInfo = json_decode(file_get_contents("../db_info.json"));
+    $conexion = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
     if (!$conexion) {
         die("Conexión fallida: " . mysqli_connect_error());
     }
