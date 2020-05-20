@@ -7,13 +7,13 @@ function connectDb(){
 }
 
 //Función para comprobar si un url yaestá en la base de datos
-function onDataBase($url){
+function onDataBase($link){
     $conexion = connectDb();
 
     $sql = "select * from `noticias`";
     $resultado = $conexion->query($sql);
     while ($fila = mysqli_fetch_array($resultado)) {
-        if($url == $fila['link']){
+        if($link == $fila['link']){
             return true;
         }else{
             return false;
@@ -34,8 +34,12 @@ function updateUrl($url){
             $description = limpiarString($meta->getAttribute('content'));
         if ($meta->getAttribute('name') == 'keywords')
             $keywords = limpiarString($meta->getAttribute('content'));
+        else
+            $keywords = 'Esta página no tiene keywords';
         if ($meta->getAttribute('name') == 'date')
             $date = limpiarString($meta->getAttribute('content'));
+        else
+            $date = 'Esta Página no tiene fecha';
     endfor;
 
     $conexion = $conexion = connectDb();
@@ -43,12 +47,12 @@ function updateUrl($url){
         die("Conexión fallida: " . mysqli_connect_error());
     }
 
-    echo"SÍ LLEGA A LA CONSULTA";
-    $sql = "UPDATE noticias SET 'title='" . $title . ",'date'=" . $date . ",'keywords'=" . $keywords . ",'description'=" . $description . "WHERE 'link'=" . $url;
-    //"UPDATE noticias SET title=$title,date=$date,keywords=$keywords,description= $description WHERE link=$url";
+    $sql = "select noticias.id where 'title'=$title";
+    $resultado = $conexion->query($sql);
+    $fila = mysqli_fetch_array($resultado);
+    $id = $fila['id'];
 
-    $sql = "INSERT INTO noticias (title, date, description, link, keywords) VALUES ( \"" . $title . "\", \"" . $date . "\",
-    \"" . $description . "\",\"" . $url . "\",\"" . $keywords . "\")";
+    $sql = "UPDATE noticias SET 'title='" . $title . ",'date'=" . $date . ",'keywords'=" . $keywords . ",'description'=" . $description . "WHERE 'noticias.id'=" . $id;
     
     if (mysqli_query($conexion, $sql)) {
         echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
@@ -76,8 +80,12 @@ function saveOnDb($url){
             $description = limpiarString($meta->getAttribute('content'));
         if ($meta->getAttribute('name') == 'keywords')
             $keywords = limpiarString($meta->getAttribute('content'));
+        else
+            $keywords = 'Esta página no tiene keywords';
         if ($meta->getAttribute('name') == 'date')
             $date = limpiarString($meta->getAttribute('content'));
+        else
+            $date = 'Esta Página no tiene fecha';
     endfor;
     
     $conexion = $conexion = connectDb();
@@ -116,16 +124,7 @@ function recrusivity_level1($url){
     endfor;
 }
 
-// FUNCIONES PARA EL CURL
-/* Función para obtener todo el contenido de una página web, scrappeado */
-function curl($url){
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $info = curl_exec($ch);
-    return $info;
-}
-
+// FUNCIONES PARA EL SCRAPPING
 /* Función para obtener el contenido de una url */
 function file_get_contents_curl($url){
     $ch = curl_init();
