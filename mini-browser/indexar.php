@@ -4,7 +4,7 @@ include 'functions.php';
 require_once('index.html');
 
 /*Se hace la conexión para actualizar la  base de datos*/
-$dbInfo = json_decode(file_get_contents("db_info.json"));
+$dbInfo = json_decode(file_get_contents("../db_info.json"));
 $conexion = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
 
 if ($conexion) {
