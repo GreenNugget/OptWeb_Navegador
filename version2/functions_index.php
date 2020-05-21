@@ -46,13 +46,13 @@ function updateUrl($url){
     if (!$conexion) {
         die("Conexión fallida: " . mysqli_connect_error());
     }
+    
+    $sql_id = "select noticias.id from noticias where title='$title'";
+    $resultado = mysqli_query($conexion, $sql_id);
+    $fila = mysqli_fetch_row($resultado);
+    $id = trim($fila[0]);
 
-    $sql = "select noticias.id where 'title'=$title";
-    $resultado = $conexion->query($sql);
-    $fila = mysqli_fetch_array($resultado);
-    $id = $fila['id'];
-
-    $sql = "UPDATE noticias SET 'title='" . $title . ",'date'=" . $date . ",'keywords'=" . $keywords . ",'description'=" . $description . "WHERE 'noticias.id'=" . $id;
+    $sql = "UPDATE `noticias` SET title='$title',date='$date',keywords='$keywords',description='$description' WHERE noticias.id='$id'";
     
     if (mysqli_query($conexion, $sql)) {
         echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
@@ -98,7 +98,7 @@ function saveOnDb($url){
 
     if (mysqli_query($conexion, $sql)) {
         echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
-        <h5>¡Las páginas se actualizaron correctamente!</h5>
+        <h5>¡Las páginas se almacenaron correctamente!</h5>
         </div>';
     } else {
         echo "<p>No se pudieron actualizar las noticias, intente más tarde :(</p>";
