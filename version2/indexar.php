@@ -13,10 +13,10 @@ if ($conexion) {
     while ($fila = mysqli_fetch_array($resultado)) {//Se va recorriendo la bd para obtener las url
         $isOnDB = onDataBase($fila['link']);
         if($isOnDB == true){
-            updateUrl($fila['link']);
+            doOperation($fila['link'],'Update');
             recrusivity_level1($fila['link']);
         }else{
-            saveOnDb($fila['link']);
+            doOperation($fila['link'], 'Save');
         }
     }
 }

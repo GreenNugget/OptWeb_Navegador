@@ -21,33 +21,41 @@ function onDataBase($link){
     }
 }
 
-function updateUrl($url){
+function doOperation($url, $operation){
     $html = file_get_contents_curl($url);
     $doc = new DOMDocument();
     @$doc->loadHTML($html);
     $nodes = $doc->getElementsByTagName('title');
     $title = limpiarString($nodes->item(0)->nodeValue);
     $metas = $doc->getElementsByTagName('meta');
+    $description = 'This page does not have a description';
+    $keywords = 'This page does not have a keywords attribute';
+    $date = 'This page does not have a date attribute';
     for ($i = 0; $i < $metas->length; $i++) :
         $meta = $metas->item($i);
         if ($meta->getAttribute('name') == 'description')
             $description = limpiarString($meta->getAttribute('content'));
         if ($meta->getAttribute('name') == 'keywords')
             $keywords = limpiarString($meta->getAttribute('content'));
-        else
-            $keywords = 'Esta página no tiene keywords';
         if ($meta->getAttribute('name') == 'date')
             $date = limpiarString($meta->getAttribute('content'));
-        else
-            $date = 'Esta Página no tiene fecha';
     endfor;
+
+    if($operation == 'Save'){
+        saveOnDb($url, $title, $description, $keywords, $date);
+    }elseif($operation == 'Update'){
+        updateUrl($url,$title,$description,$keywords,$date);
+    }
+}
+
+function updateUrl($url,$title,$description,$keywords,$date){
 
     $conexion = $conexion = connectDb();
     if (!$conexion) {
         die("Conexión fallida: " . mysqli_connect_error());
     }
     
-    $sql_id = "select noticias.id from noticias where title='$title'";
+    $sql_id = "select noticias.id from noticias where noticias.link='$url'";
     $resultado = mysqli_query($conexion, $sql_id);
     $fila = mysqli_fetch_row($resultado);
     $id = trim($fila[0]);
@@ -66,27 +74,7 @@ function updateUrl($url){
 }
 
 /* Función para almacenar en la base de datos */
-function saveOnDb($url){
-
-    $html = file_get_contents_curl($url);
-    $doc = new DOMDocument();
-    @$doc->loadHTML($html);
-    $nodes = $doc->getElementsByTagName('title');
-    $title = limpiarString($nodes->item(0)->nodeValue);
-    $metas = $doc->getElementsByTagName('meta');
-    for ($i = 0; $i < $metas->length; $i++) :
-        $meta = $metas->item($i);
-        if ($meta->getAttribute('name') == 'description')
-            $description = limpiarString($meta->getAttribute('content'));
-        if ($meta->getAttribute('name') == 'keywords')
-            $keywords = limpiarString($meta->getAttribute('content'));
-        else
-            $keywords = 'Esta página no tiene keywords';
-        if ($meta->getAttribute('name') == 'date')
-            $date = limpiarString($meta->getAttribute('content'));
-        else
-            $date = 'Esta Página no tiene fecha';
-    endfor;
+function saveOnDb($url, $title, $description, $keywords, $date){
     
     $conexion = $conexion = connectDb();
     if (!$conexion) {
@@ -116,9 +104,9 @@ function recrusivity_level1($url){
         $info = $oneLink->getAttribute('href');
         $info = $url . $info;
         if(onDataBase($info)){
-            updateUrl($info);
+            doOperation($info,'Update');
         }else{
-            saveOnDb($info);
+            doOperation($info, 'Save');
         }
         //echo '<p>' . $info . '</p>'; //Esto es únicamente para visualizar las urls
     endfor;
