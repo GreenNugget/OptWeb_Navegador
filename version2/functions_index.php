@@ -7,13 +7,13 @@ function connectDb(){
 }
 
 //Función para comprobar si un url yaestá en la base de datos
-function onDataBase($url){
+function onDataBase($link){
     $conexion = connectDb();
 
     $sql = "select * from `noticias`";
     $resultado = $conexion->query($sql);
     while ($fila = mysqli_fetch_array($resultado)) {
-        if($url == $fila['link']){
+        if($link == $fila['link']){
             return true;
         }else{
             return false;
@@ -21,13 +21,16 @@ function onDataBase($url){
     }
 }
 
-function updateUrl($url){
+function doOperation($url, $operation){
     $html = file_get_contents_curl($url);
     $doc = new DOMDocument();
     @$doc->loadHTML($html);
     $nodes = $doc->getElementsByTagName('title');
     $title = limpiarString($nodes->item(0)->nodeValue);
     $metas = $doc->getElementsByTagName('meta');
+    $description = 'This page does not have a description';
+    $keywords = 'This page does not have a keywords attribute';
+    $date = 'This page does not have a date attribute';
     for ($i = 0; $i < $metas->length; $i++) :
         $meta = $metas->item($i);
         if ($meta->getAttribute('name') == 'description')
@@ -38,16 +41,26 @@ function updateUrl($url){
             $date = limpiarString($meta->getAttribute('content'));
     endfor;
 
+    if($operation == 'Save'){
+        saveOnDb($url, $title, $description, $keywords, $date);
+    }elseif($operation == 'Update'){
+        updateUrl($url,$title,$description,$keywords,$date);
+    }
+}
+
+function updateUrl($url,$title,$description,$keywords,$date){
+
     $conexion = $conexion = connectDb();
     if (!$conexion) {
         die("Conexión fallida: " . mysqli_connect_error());
     }
+    
+    $sql_id = "select noticias.id from noticias where noticias.link='$url'";
+    $resultado = mysqli_query($conexion, $sql_id);
+    $fila = mysqli_fetch_row($resultado);
+    $id = trim($fila[0]);
 
-    echo"SÍ LLEGA A LA CONSULTA";
-    $sql = "UPDATE noticias SET 'title='" . $title . ",'date'=" . $date . ",'keywords'=" . $keywords . ",'description'=" . $description . "WHERE 'link'=" . $url;
-
-    $sql = "INSERT INTO noticias (title, date, description, link, keywords) VALUES ( \"" . $title . "\", \"" . $date . "\",
-    \"" . $description . "\",\"" . $url . "\",\"" . $keywords . "\")";
+    $sql = "UPDATE `noticias` SET title='$title',date='$date',keywords='$keywords',description='$description' WHERE noticias.id='$id'";
     
     if (mysqli_query($conexion, $sql)) {
         echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
@@ -61,23 +74,7 @@ function updateUrl($url){
 }
 
 /* Función para almacenar en la base de datos */
-function saveOnDb($url){
-
-    $html = file_get_contents_curl($url);
-    $doc = new DOMDocument();
-    @$doc->loadHTML($html);
-    $nodes = $doc->getElementsByTagName('title');
-    $title = limpiarString($nodes->item(0)->nodeValue);
-    $metas = $doc->getElementsByTagName('meta');
-    for ($i = 0; $i < $metas->length; $i++) :
-        $meta = $metas->item($i);
-        if ($meta->getAttribute('name') == 'description')
-            $description = limpiarString($meta->getAttribute('content'));
-        if ($meta->getAttribute('name') == 'keywords')
-            $keywords = limpiarString($meta->getAttribute('content'));
-        if ($meta->getAttribute('name') == 'date')
-            $date = limpiarString($meta->getAttribute('content'));
-    endfor;
+function saveOnDb($url, $title, $description, $keywords, $date){
     
     $conexion = $conexion = connectDb();
     if (!$conexion) {
@@ -89,7 +86,7 @@ function saveOnDb($url){
 
     if (mysqli_query($conexion, $sql)) {
         echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
-        <h5>¡Las páginas se actualizaron correctamente!</h5>
+        <h5>¡Las páginas se almacenaron correctamente!</h5>
         </div>';
     } else {
         echo "<p>No se pudieron actualizar las noticias, intente más tarde :(</p>";
@@ -107,23 +104,14 @@ function recrusivity_level1($url){
         $info = $oneLink->getAttribute('href');
         $info = $url . $info;
         if(onDataBase($info)){
-            updateUrl($info);
+            doOperation($info,'Update');
         }else{
-            saveOnDb($info);
+            doOperation($info, 'Save');
         }
     endfor;
 }
 
-// FUNCIONES PARA EL CURL
-/* Función para obtener todo el contenido de una página web, scrappeado */
-function curl($url){
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $info = curl_exec($ch);
-    return $info;
-}
-
+// FUNCIONES PARA EL SCRAPPING
 /* Función para obtener el contenido de una url */
 function file_get_contents_curl($url){
     $ch = curl_init();

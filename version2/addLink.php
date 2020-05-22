@@ -11,6 +11,9 @@ if(isset($_GET['addbtn'])):
     $nodes 	= 	$doc->getElementsByTagName('title');
     $title 	= 	limpiarString($nodes->item(0)->nodeValue);
     $metas 	= 	$doc->getElementsByTagName('meta');
+    $description = 'This page does not have a description';
+    $keywords = 'This page does not have a keywords attribute';
+    $date = 'This page does not have a date attribute';
     for ($i = 0; $i < $metas->length; $i++):
 		$meta = $metas->item($i);
         if($meta->getAttribute('name') == 'description')
@@ -23,20 +26,22 @@ if(isset($_GET['addbtn'])):
 
     //COMENZAMOS A ALMACENAR EN LA BASE DE DATOS
     $dbInfo = json_decode(file_get_contents("../db_info.json"));
-    $conn = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
-    if (!$conn) {
+    $connection = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
+    if (!$connection) {
         die("Conexión fallida: " . mysqli_connect_error());
     }
 
     $sql = "INSERT INTO noticias (title, date, description, link, keywords) VALUES ( \"".$title."\", \"".$date."\",
     \"".$description."\",\"".$url."\",\"".$keywords."\")";
 
-    if (mysqli_query($conn, $sql)) {
+    if (mysqli_query($connection, $sql)) {
         echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
         <h5>¡La página se almacenó correctamente!</h5>
         </div>';
     } else {
-            echo "<p>No se pudo realizar la conexión a la base de datos :( </p>";
+        echo '<div class="container my-5 bg-dark text-white d-block" id="addLinkContainer">
+        <h5>¡La página ya se encuentra almacenada en la base de datos!</h5>
+        </div>';
     }
 
 else:
