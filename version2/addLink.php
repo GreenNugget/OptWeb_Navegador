@@ -11,18 +11,17 @@ if(isset($_GET['addbtn'])):
     $nodes 	= 	$doc->getElementsByTagName('title');
     $title 	= 	limpiarString($nodes->item(0)->nodeValue);
     $metas 	= 	$doc->getElementsByTagName('meta');
+    $description = 'This page does not have a description';
+    $keywords = 'This page does not have a keywords attribute';
+    $date = 'This page does not have a date attribute';
     for ($i = 0; $i < $metas->length; $i++):
 		$meta = $metas->item($i);
         if($meta->getAttribute('name') == 'description')
         	$description = limpiarString($meta->getAttribute('content'));
         if($meta->getAttribute('name') == 'keywords')
             $keywords = limpiarString($meta->getAttribute('content'));
-        else
-            $keywords = 'Esta página no tiene keywords';
         if($meta->getAttribute('name') == 'date')
             $date = limpiarString($meta->getAttribute('content'));
-        else
-            $date = 'Esta Página no tiene fecha';
     endfor;
 
     //COMENZAMOS A ALMACENAR EN LA BASE DE DATOS
