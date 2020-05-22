@@ -21,6 +21,7 @@ function onDataBase($link){
     }
 }
 
+//Función para scrappear el contenido de una url y actualizar o insertar en la bd
 function doOperation($url, $operation){
     $html = file_get_contents_curl($url);
     $doc = new DOMDocument();
@@ -48,8 +49,8 @@ function doOperation($url, $operation){
     }
 }
 
+//Función para actualizar la información de un enlace 
 function updateUrl($url,$title,$description,$keywords,$date){
-
     $conexion = $conexion = connectDb();
     if (!$conexion) {
         die("Conexión fallida: " . mysqli_connect_error());
@@ -111,8 +112,7 @@ function recrusivity_level1($url){
     endfor;
 }
 
-// FUNCIONES PARA EL SCRAPPING
-/* Función para obtener el contenido de una url */
+//Función para obtener el contenido de una url
 function file_get_contents_curl($url){
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -124,7 +124,7 @@ function file_get_contents_curl($url){
     return $data;
 }
 
-/* Función para quitarle caracteres innecesarios a los strings */
+//Función para quitarle caracteres innecesarios a los strings
 function limpiarString($String){
     $String = str_replace(array("|", "|", "[", "^", "´", "`", "¨", "~", "]", "'", "#", "{", "}", ".", ""), "", $String);
     return $String;

@@ -2,7 +2,6 @@
 require_once('index.html');
 
 $word = $_POST['wordToSearch'];
-//Se establece la conexión con la base de datos
 $dbInfo = json_decode(file_get_contents("../db_info.json"));
 $conexion = mysqli_connect($dbInfo->host, $dbInfo->user, $dbInfo->password, $dbInfo->database);
 
